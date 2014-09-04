@@ -50,11 +50,11 @@ retorne una nueva coleccion donde el valor es insertado intercalado cada dos arg
 que cumplan el predicado"
 [predicado valor secuencia]
 (lazy-seq
-         	(if (predicado (first secuencia) (ffirst secuencia))
-         	(cons (cons (first secuencia) valor) (intercalar predicado valor (rest secuencia)))
-          
-           (cons (first secuencia) (intercalar predicado valor (rest secuencia)))
-              )))
+               	(if (predicado (first secuencia) (first (rest secuencia)))
+               	(cons (conj '() valor (first secuencia)) (intercalar predicado valor (rest secuencia)))
+                
+                 (cons (first secuencia) (intercalar predicado valor (rest secuencia)))
+                    )))
 
 (defn tartamudeo
 "Escriba una funcion que retorne una secuencia lazy que comprima el tartamudeo de una secuencia de numeros.
