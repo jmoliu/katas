@@ -7,13 +7,15 @@ retornar una funcion equivalente de n argumentos"
 [f]
 (fn [& args]
                  (loop [funcion f argumentos args]
-                   (def res (funcion (first argumentos)))
+                   (let [res (funcion (first argumentos))]
                      (if (fn? res)
                        (recur res (rest argumentos))
-                       (apply res)
-                       ))))
+                       res
+                       ))
+                     )))
 
 
+;;No esta funcionando con secuencias infinitas
 (defn search
 "Dado un numero cualquiera de secuencias, cada una ya ordenada de menor a mayor, encontrar el numero
 mas chico que aparezca en todas las secuencias, las secuencias pueden ser infinitas."
@@ -28,19 +30,22 @@ mas chico que aparezca en todas las secuencias, las secuencias pueden ser infini
 
 ;;FUNCION AGREGADA
 (defn avanzar
-  [mayor & secuencias]
+  [mayor secuencias]
   (loop [seqs secuencias acc []]
      (if (empty? seqs)
       acc
       (if (< (first (first seqs)) mayor)
-                             
-        (recur (rest seqs) (into acc [(vec (rest (first seqs)))]))
-        (recur (rest seqs) (into acc [(vec (first seqs))])))
- )))
+        
+        (recur (rest seqs) (concat acc [(rest (first seqs))]))
+        (recur (rest seqs) (concat acc [(first seqs)]))
+        
+        ;(recur (rest seqs) (into acc [(vec (rest (first seqs)))]))
+        ;(recur (rest seqs) (into acc [(vec (first seqs))])))
+ ))))
 
 ;;FUNCION AGREGADA
 (defn primer-mayor
-[& seqs]
+[seqs]
 (reduce max (map first seqs)))
 
 
@@ -50,11 +55,15 @@ retorne una nueva coleccion donde el valor es insertado intercalado cada dos arg
 que cumplan el predicado"
 [predicado valor secuencia]
 (lazy-seq
-               	(if (predicado (first secuencia) (first (rest secuencia)))
-               	(cons (conj '() valor (first secuencia)) (intercalar predicado valor (rest secuencia)))
-                
-                 (cons (first secuencia) (intercalar predicado valor (rest secuencia)))
-                    )))
+                       (if-not (empty? (rest secuencia))
+                         (if (predicado (first secuencia) (first (rest secuencia)))
+                           
+                                  (conj (intercalar predicado valor (rest secuencia)) valor (first secuencia))
+                                  (conj (intercalar predicado valor (rest secuencia)) (first secuencia))
+                             )
+                                secuencia
+                         ) 	
+                       ))
 
 (defn tartamudeo
 "Escriba una funcion que retorne una secuencia lazy que comprima el tartamudeo de una secuencia de numeros.
