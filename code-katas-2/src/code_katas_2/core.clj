@@ -63,10 +63,46 @@ que cumplan el predicado"
                          ) 	
                        ))
 
+
+
 (defn tartamudeo
 "Escriba una funcion que retorne una secuencia lazy que comprima el tartamudeo de una secuencia de numeros.
 Comprimir el tartamudeo se refiere a que [1 1 1] se exprese como [3 1] y a su vez [3 1] se exprese como [1 3 1 1].
 La funcion debe aceptar una secuencia inicial de numeros, y devolver una secuencia infinita de compresiones, donde
 cada nuevo elemento es el elemento anterior comprimido."
 [secuencia]
+(next (iterate sucesion-tartamudeo secuencia))
 )
+
+(defn sucesion-tartamudeo
+  [secuencia]
+    (lazy-seq
+      (if-not (empty? secuencia)
+        (concat (termino-t (repetidos secuencia)) (sucesion-tartamudeo (drop (count (repetidos secuencia)) secuencia)))
+         secuencia
+         )))
+                              
+
+
+;FUNCION AGREGADA
+(defn repetidos
+  [vector]
+  (if-not (empty? (rest vector))
+                         
+                       (loop [v vector acc []]
+                         (def res (conj acc (first v)))
+                         (if (= (first v) (first (rest v)))
+                           (recur (rest v) res)
+                           (conj acc (first v))))
+                       
+                       [(first vector)]
+                       ))
+
+;;FUNCION AGREGADA
+(defn termino-t
+     [vector]
+     (def repeticiones (count vector))
+     (def valor (first vector))
+     (conj [] repeticiones valor))
+
+
