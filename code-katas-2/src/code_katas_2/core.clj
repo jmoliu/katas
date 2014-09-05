@@ -46,7 +46,6 @@ mas chico que aparezca en todas las secuencias, las secuencias pueden ser infini
 (reduce max (map first seqs)))
 
 
-;;FUNCIONA
 (defn intercalar
 "Escriba una funcion que tome un predicado de 2 argumentos, un valor y una coleccion, y
 retorne una nueva coleccion donde el valor es insertado intercalado cada dos argumentos
