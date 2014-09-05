@@ -15,7 +15,7 @@ retornar una funcion equivalente de n argumentos"
                      )))
 
 
-;;No esta funcionando con secuencias infinitas
+
 (defn search
 "Dado un numero cualquiera de secuencias, cada una ya ordenada de menor a mayor, encontrar el numero
 mas chico que aparezca en todas las secuencias, las secuencias pueden ser infinitas."
@@ -25,23 +25,20 @@ mas chico que aparezca en todas las secuencias, las secuencias pueden ser infini
            (if (= (count (distinct candidatos)) 1)
              (first candidatos)
              (let [mayor (primer-mayor secuencias)]
-               (recur (avanzar mayor secuencias)))
+               (recur (avanzar-lazy mayor secuencias)))
              )))
 
 ;;FUNCION AGREGADA
-(defn avanzar
+(defn avanzar-lazy
   [mayor secuencias]
-  (loop [seqs secuencias acc []]
-     (if (empty? seqs)
-      acc
-      (if (< (first (first seqs)) mayor)
-        
-        (recur (rest seqs) (concat acc [(rest (first seqs))]))
-        (recur (rest seqs) (concat acc [(first seqs)]))
-        
-        ;(recur (rest seqs) (into acc [(vec (rest (first seqs)))]))
-        ;(recur (rest seqs) (into acc [(vec (first seqs))])))
- ))))
+  (lazy-seq 
+    (when-not (empty? secuencias)
+      (if (< (first(first secuencias)) mayor)
+        (conj (avanzar-lazy mayor (rest secuencias)) (rest(first secuencias)))
+        (conj (avanzar-lazy mayor (rest secuencias)) (first secuencias))
+        ))))
+      
+
 
 ;;FUNCION AGREGADA
 (defn primer-mayor
@@ -49,6 +46,7 @@ mas chico que aparezca en todas las secuencias, las secuencias pueden ser infini
 (reduce max (map first seqs)))
 
 
+;;FUNCIONA
 (defn intercalar
 "Escriba una funcion que tome un predicado de 2 argumentos, un valor y una coleccion, y
 retorne una nueva coleccion donde el valor es insertado intercalado cada dos argumentos
