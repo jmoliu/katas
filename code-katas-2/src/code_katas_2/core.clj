@@ -70,7 +70,7 @@ Comprimir el tartamudeo se refiere a que [1 1 1] se exprese como [3 1] y a su ve
 La funcion debe aceptar una secuencia inicial de numeros, y devolver una secuencia infinita de compresiones, donde
 cada nuevo elemento es el elemento anterior comprimido."
 [secuencia]
-(next (iterate sucesion-tartamudeo secuencia))
+(iterate sucesion-tartamudeo(sucesion-tartamudeo secuencia))
 )
 
 (defn sucesion-tartamudeo
@@ -88,20 +88,17 @@ cada nuevo elemento es el elemento anterior comprimido."
   [vector]
   (if-not (empty? (rest vector))
                          
-                       (loop [v vector acc []]
-                         (def res (conj acc (first v)))
-                         (if (= (first v) (first (rest v)))
-                           (recur (rest v) res)
-                           (conj acc (first v))))
-                       
-                       [(first vector)]
+    (loop [v vector acc []]
+      (let [res (conj acc (first v))]
+      (if (= (first v) (first (rest v)))
+        (recur (rest v) res)
+        (conj acc (first v)))))
+         [(first vector)]
                        ))
 
 ;;FUNCION AGREGADA
 (defn termino-t
      [vector]
-     (def repeticiones (count vector))
-     (def valor (first vector))
-     (conj [] repeticiones valor))
-
+     (let [repeticiones (count vector) valor (first vector)]
+     (conj [] repeticiones valor)))
 
